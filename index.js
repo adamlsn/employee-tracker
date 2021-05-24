@@ -98,6 +98,7 @@ function lineBreak() {
 function viewDept() {
     lineBreak();
     const sql = `SELECT * FROM department`
+    
     connection.query(sql, (err, res) => {
         if(err) throw err;
         console.table(res);
@@ -125,11 +126,12 @@ function viewEmp() {
     LEFT JOIN role ON employee.role_id = role.id
     LEFT JOIN department ON role.department_id = department.id
     LEFT JOIN employee emp ON employee.manager_id = emp.id;`;
+
     connection.query(sql, (err, res) => {
         if(err) throw err;
         console.table(res);
         cont();
-    })
+    });
 };
 
 function addDept() {
@@ -144,7 +146,7 @@ function addDept() {
         connection.query(sql, [response.deptName], (err, res) => {
             if(err) throw err;
             cont();
-        })
+        });
     });
 };
 
@@ -175,8 +177,8 @@ function addRole() {
         connection.query(sql, answers, (err, res) => {
             if(err) throw err;
             cont();
-        })
-    })
+        });
+    });
 };
 
 function addEmp() {
@@ -211,12 +213,33 @@ function addEmp() {
         connection.query(sql, answers, (err, res) => {
             if(err) throw err;
             cont();
-        })
+        });
     });
 };
 
 function updateEmp() {
-    cont();
+    lineBreak();
+    inquirer.prompt([
+        {
+            message: "Enter JUST the first name of the employee you'd like to update:",
+            type: "input",
+            name: "name"
+        },
+        {
+            message: "Enter the Role ID you'd like the employee to have",
+            type: "input",
+            name: "id"
+        }
+    ])
+    .then(response => {
+        const sql = `UPDATE employee SET role_id = ? WHERE first_name = ?`;
+        const answers = [response.id, response.name];
+
+        connection.query(sql, answers, (err, res) => {
+            if(err) throw err;
+            cont();
+        });
+    });
 };
 
 function exit() {
