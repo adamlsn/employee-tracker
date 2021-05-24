@@ -12,6 +12,7 @@ const connection = mysql.createConnection({
 
 connection.connect(err => {
     if(err) throw err;
+    lineBreak();
     console.log("=== DUNDER MIFFLIN PAPER COMPANY ===");
     root();
 })
@@ -95,6 +96,7 @@ function lineBreak() {
 };
 
 function viewDept() {
+    lineBreak();
     const sql = `SELECT * FROM department`
     connection.query(sql, (err, res) => {
         if(err) throw err;
@@ -104,6 +106,7 @@ function viewDept() {
 };
 
 const viewRoles = () =>  {
+    lineBreak();
     const sql = `SELECT role.id, role.title, role.salary, department.name
     FROM role
     LEFT JOIN department ON role.department_id = department.id`;
@@ -116,6 +119,7 @@ const viewRoles = () =>  {
   };
 
 function viewEmp() {
+    lineBreak();
     const sql = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name As department, role.salary, CONCAT(emp.first_name, ' ' ,emp.last_name) AS manager 
     FROM employee
     LEFT JOIN role ON employee.role_id = role.id
@@ -129,15 +133,86 @@ function viewEmp() {
 };
 
 function addDept() {
-    cont();
+    lineBreak();
+    inquirer.prompt({
+        message: "What is the department title?",
+        type: "input",
+        name: "deptName"
+    })
+    .then(response => {
+        const sql = `INSERT INTO department (name) VALUES (?)`
+        connection.query(sql, [response.deptName], (err, res) => {
+            if(err) throw err;
+            cont();
+        })
+    });
 };
 
 function addRole() {
-    cont();
+    lineBreak();
+    console.log("Please enter the following data:")
+    inquirer.prompt([
+        {
+            message: "Title of role:",
+            type: "input",
+            name: "title"
+        },
+        {
+            message: "Salary of role (numbers only):",
+            type: "input",
+            name: "salary"
+        },
+        {
+            message: "Department ID number (numbers only)",
+            type: "input",
+            name: "id"
+        }
+    ])
+    .then(response => {
+        const sql = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`;
+        const answers = [response.title, response.salary, response.id]
+
+        connection.query(sql, answers, (err, res) => {
+            if(err) throw err;
+            cont();
+        })
+    })
 };
 
 function addEmp() {
-    cont();
+    lineBreak();
+    console.log("Please enter the following data:")
+    inquirer.prompt([
+        {
+            message: "First Name:",
+            type: "input",
+            name: "firstName"
+        },
+        {
+            message: "Last Name:",
+            type: "input",
+            name: "lastName"
+        },
+        {
+            message: "Role ID Number (numbers only):",
+            type: "input",
+            name: "id"
+        },
+        {
+            message: "If the employee has a manager, please enter their ID (numbers only):",
+            type: "input",
+            name: "managerID"
+        }
+    ])
+    .then(response => {
+        const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`;
+        const answers = [response.firstName, response.lastName, response.id, response.managerID]
+        
+        connection.query(sql, answers, (err, res) => {
+            if(err) throw err;
+            cont();
+        })
+    });
 };
 
 function updateEmp() {
