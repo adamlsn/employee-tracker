@@ -25,4 +25,4 @@ VALUES
     ("Angela", "Martin", 5, 2),
     ("Kevin", "Malone", 5, 2),
     ("Toby", "Flenderson", 6, NULL),
-    ("Kelly", "Kapoor", 7, 5);
+    ("Kelly", "Kapoor", 7, 8);
