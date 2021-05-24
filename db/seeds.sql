@@ -13,7 +13,7 @@ VALUES
     ("Sales Person", 36000, 1),
     ("Accountant", 45000, 2),
     ("Human Relations", 45000, 4),
-    ("Customer Service", 4);
+    ("Customer Service", 39999, 4);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES

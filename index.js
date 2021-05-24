@@ -25,7 +25,7 @@ function root() {
         choices: [
             "View All Departments",
             "View All Roles",
-            "View All Employess",
+            "View All Employees",
             "Add New Department",
             "Add New Role",
             "Add New Employee",
@@ -41,7 +41,7 @@ function root() {
             case "View All Roles":
                 viewRoles();
                 break;
-            case "View All Employess":
+            case "View All Employees":
                 viewEmp();
                 break;
             case "Add New Department":
@@ -92,31 +92,53 @@ function cont() {
 
 function lineBreak() {
     console.log("\n");
-}
+};
 
 function viewDept() {
-    cont();
-}
+    const sql = `SELECT * FROM department`
+    connection.query(sql, (err, res) => {
+        if(err) throw err;
+        console.table(res);
+        cont();
+    });
+};
 
-function viewRoles() {
-    cont();
-}
+const viewRoles = () =>  {
+    const sql = `SELECT role.id, role.title, role.salary, department.name
+    FROM role
+    LEFT JOIN department ON role.department_id = department.id`;
+  
+    connection.query(sql, (err, res) => {
+      if(err) throw err;
+      console.table(res)
+      cont();
+    });
+  };
 
 function viewEmp() {
-    cont();
-}
+    const sql = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name As department, role.salary, CONCAT(emp.first_name, ' ' ,emp.last_name) AS manager 
+    FROM employee
+    LEFT JOIN role ON employee.role_id = role.id
+    LEFT JOIN department ON role.department_id = department.id
+    LEFT JOIN employee emp ON employee.manager_id = emp.id;`;
+    connection.query(sql, (err, res) => {
+        if(err) throw err;
+        console.table(res);
+        cont();
+    })
+};
 
 function addDept() {
     cont();
-}
+};
 
 function addRole() {
     cont();
-}
+};
 
 function addEmp() {
     cont();
-}
+};
 
 function updateEmp() {
     cont();
